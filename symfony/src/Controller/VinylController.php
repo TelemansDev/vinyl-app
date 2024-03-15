@@ -33,11 +33,11 @@ class VinylController extends AbstractController
     {
         if ($slug) {
             $unicodeSlug = new UnicodeString($slug);
-            $title = 'Genre: ' . $unicodeSlug->title(true);
+            $genre = 'Genre: ' . $unicodeSlug->title(true);
         } else {
-            $title = 'All genres';
+            $genre = 'All genres';
         }
 
-        return new Response($title);
+        return $this->render('vinyl/browse.html.twig', ['genre' => $genre]);
     }
 }

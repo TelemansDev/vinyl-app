@@ -4,7 +4,7 @@ RUN apk --no-cache add \
     git \
     postgresql-dev
 
-RUN docker-php-ext-install pgsql pdo_pgsql pdo
+RUN docker-php-ext-install pgsql pdo_pgsql pdo intl
 
 RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 COPY symfony /var/www/symfony

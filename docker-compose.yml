@@ -35,6 +35,21 @@ services:
       - ./data:/var/lib/postgresql/data
     networks:
       - symfony
+
+  node:
+    image: node:21-alpine3.18
+    working_dir: /var/www/symfony
+    ports:
+      - "9000:9000"
+    command: sh -c "yarn install &&
+      yarn encore dev-server --hot --port 9000 --host 0.0.0.0"
+    volumes:
+      - ./symfony/:/var/www/symfony/
+    networks:
+      - symfony
+
+volumes:
+  symfony:
       
 networks:
   symfony:

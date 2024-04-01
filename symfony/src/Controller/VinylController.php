@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\UnicodeString;
@@ -29,15 +28,47 @@ class VinylController extends AbstractController
     }
 
     #[Route(path:'/browse/{slug}', name:'browse')]
-    public function browse(Request $request, string $slug = ''): Response
+    public function browse(string $slug = ''): Response
+    {
+        return $this->render('vinyl/browse.html.twig', [
+            'genre' => $this->prepareGenre($slug),
+            'mixes' => $this->getMixes(),
+        ]);
+    }
+
+    private function prepareGenre(string $slug): string
     {
         if ($slug) {
             $unicodeSlug = new UnicodeString($slug);
-            $genre = 'Genre: ' . $unicodeSlug->title(true);
-        } else {
-            $genre = 'All genres';
+
+            return 'Genre: ' . $unicodeSlug->title(true);
         }
 
-        return $this->render('vinyl/browse.html.twig', ['genre' => $genre]);
+        return 'All genres';
+    }
+
+    private function getMixes(): array
+    {
+        // temporary fake "mixes" data
+        return [
+            [
+                'title' => 'PB & Jams',
+                'trackCount' => 14,
+                'genre' => 'Rock',
+                'createdAt' => new \DateTime('2021-10-02'),
+            ],
+            [
+                'title' => 'Put a Hex on your Ex',
+                'trackCount' => 8,
+                'genre' => 'Heavy Metal',
+                'createdAt' => new \DateTime('2022-04-28'),
+            ],
+            [
+                'title' => 'Spice Grills - Summer Tunes',
+                'trackCount' => 10,
+                'genre' => 'Pop',
+                'createdAt' => new \DateTime('2019-06-20'),
+            ],
+        ];
     }
 }

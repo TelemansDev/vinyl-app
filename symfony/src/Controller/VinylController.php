@@ -2,17 +2,20 @@
 
 namespace App\Controller;
 
-use Exception;
+use Psr\Cache\CacheItemInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\UnicodeString;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Throwable;
 
 class VinylController extends AbstractController
 {
     public function __construct(
         private readonly HttpClientInterface $httpClient,
+        private readonly CacheInterface $cache,
     ) {}
 
     #[Route(path:"/", name:"homepage")]
@@ -55,11 +58,15 @@ class VinylController extends AbstractController
 
     private function getMixes(): array
     {
+        dd($this->cache);
         try {
-            $response = $this->httpClient->request('GET', 'https://raw.githubusercontent.com/SymfonyCasts/vinyl-mixes/main/mixes.json');
+            return $this->cache->get('mixes_data', function(CacheItemInterface $cacheItem) {
+                $cacheItem->expiresAfter(300);
+                $response = $this->httpClient->request('GET', 'https://raw.githubusercontent.com/SymfonyCasts/vinyl-mixes/main/mixes.json');
 
-            return $response->toArray();
-        } catch (Exception) {
+                return $response->toArray();
+            });
+        } catch (Throwable $e) {
             return [];
         }
     }

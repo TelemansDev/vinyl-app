@@ -58,7 +58,6 @@ class VinylController extends AbstractController
 
     private function getMixes(): array
     {
-        dd($this->cache);
         try {
             return $this->cache->get('mixes_data', function(CacheItemInterface $cacheItem) {
                 $cacheItem->expiresAfter(300);

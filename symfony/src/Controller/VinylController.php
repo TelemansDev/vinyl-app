@@ -2,22 +2,14 @@
 
 namespace App\Controller;
 
-use Psr\Cache\CacheItemInterface;
+use App\Repository\MixRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\UnicodeString;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Throwable;
 
 class VinylController extends AbstractController
 {
-    public function __construct(
-        private readonly HttpClientInterface $httpClient,
-        private readonly CacheInterface $cache,
-    ) {}
-
     #[Route(path:"/", name:"homepage")]
     public function homepage(): Response
     {
@@ -37,11 +29,11 @@ class VinylController extends AbstractController
     }
 
     #[Route(path:'/browse/{slug}', name:'browse')]
-    public function browse(string $slug = ''): Response
+    public function browse(MixRepository $mixRepository, string $slug = ''): Response
     {
         return $this->render('vinyl/browse.html.twig', [
             'genre' => $this->prepareGenre($slug),
-            'mixes' => $this->getMixes(),
+            'mixes' => $mixRepository->findAll(),
         ]);
     }
 
@@ -54,19 +46,5 @@ class VinylController extends AbstractController
         }
 
         return 'All genres';
-    }
-
-    private function getMixes(): array
-    {
-        try {
-            return $this->cache->get('mixes_data', function(CacheItemInterface $cacheItem) {
-                $cacheItem->expiresAfter(300);
-                $response = $this->httpClient->request('GET', 'https://raw.githubusercontent.com/SymfonyCasts/vinyl-mixes/main/mixes.json');
-
-                return $response->toArray();
-            });
-        } catch (Throwable $e) {
-            return [];
-        }
     }
 }

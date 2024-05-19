@@ -13,14 +13,14 @@ final class MixRepository
 {
     public function __construct(
         private readonly CacheInterface $cache,
-        private readonly HttpClientInterface $httpClient,
+        private readonly HttpClientInterface $githubContentClient,
     ) {}
 
     public function findAll(): array
     {
         try {
             return $this->cache->get('mixes_data', function(CacheItemInterface $cacheItem) {
-                $response = $this->httpClient->request('GET', 'https://raw.githubusercontent.com/SymfonyCasts/vinyl-mixes/main/mixes.json');
+                $response = $this->githubContentClient->request('GET', '/SymfonyCasts/vinyl-mixes/main/mixes.json');
 
                 return $response->toArray();
             });

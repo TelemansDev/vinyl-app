@@ -1,5 +1,7 @@
 FROM php:8.3.3RC1-fpm-alpine3.18
 
+RUN printf 'date.timezone = "Europe/Warsaw"' > /usr/local/etc/php/conf.d/tzone.ini
+
 RUN apk --no-cache add \
     $PHPIZE_DEPS \
     git \

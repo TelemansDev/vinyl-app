@@ -30,6 +30,8 @@
                         <span>{{ mix.genre }}</span>
                         |
                         <span>{{ mix.createdAt|ago(null, 'pl') }}</span>
+                        <br>
+                        {{ mix.getVotesString() }} votes
                     </div>
                 </div>
             {% endfor %}

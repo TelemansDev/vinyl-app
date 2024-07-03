@@ -1,5 +1,15 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        a {
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
 <div class="container">
     <h1>Browse {{ genre }}</h1>
@@ -22,17 +32,19 @@
         <div class="row">
             {% for mix in mixes %}
                 <div class="col col-md-4">
-                    <div class="mixed-vinyl-container p-3 text-center">
-                        <img src="https://via.placeholder.com/300" data-src="https://via.placeholder.com/300" alt="Square placeholder img">
-                        <p class="mt-2"><strong>{{ mix.title }}</strong></p>
-                        <span>{{ mix.trackCount }} Tracks</span>
-                        |
-                        <span>{{ mix.genre }}</span>
-                        |
-                        <span>{{ mix.createdAt|ago(null, 'pl') }}</span>
-                        <br>
-                        {{ mix.getVotesString() }} votes
-                    </div>
+                    <a href="{{ path('mix_show', {'id': mix.id}) }}">
+                        <div class="mixed-vinyl-container p-3 text-center">
+                            <img src="https://via.placeholder.com/300" data-src="https://via.placeholder.com/300" alt="Square placeholder img">
+                            <p class="mt-2"><strong>{{ mix.title }}</strong></p>
+                            <span>{{ mix.trackCount }} Tracks</span>
+                            |
+                            <span>{{ mix.genre }}</span>
+                            |
+                            <span>{{ mix.createdAt|ago(null, 'pl') }}</span>
+                            <br>
+                            {{ mix.getVotesString() }} votes
+                        </div>
+                    </a>
                 </div>
             {% endfor %}
         </div>

@@ -114,6 +114,20 @@ class VinylMix
         return $this;
     }
 
+    public function upVote(): static
+    {
+        $this->votes++;
+
+        return $this;
+    }
+
+    public function downVote(): static
+    {
+        $this->votes--;
+
+        return $this;
+    }
+
     public function getVotesString(): string
     {
         $prefix = ($this->votes === 0) ? '' : (

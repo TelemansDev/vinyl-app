@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\VinylMix;
 use App\Repository\VinylMixRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

@@ -31,7 +31,6 @@ final class VinylMixFactory extends PersistentProxyObjectFactory
      */
     protected function defaults(): array|callable
     {
-        dd();
         return [
             'genre' => self::faker()->randomElement(['pop', 'rock']),
             'title' => self::faker()->words(5, true),

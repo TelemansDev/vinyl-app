@@ -30,8 +30,8 @@
     <div>
         <h2 class="mt-5">Mixes</h2>
         <div class="row">
-            {% for mix in mixes %}
-                <div class="col col-md-4">
+            {% for mix in pager %}
+                <div class="col col-md-4 mb-2">
                     <a href="{{ path('mix_show', {'slug': mix.slug}) }}">
                         <div class="mixed-vinyl-container p-3 text-center">
                             <img src="https://via.placeholder.com/300" data-src="https://via.placeholder.com/300" alt="Square placeholder img">
@@ -47,6 +47,8 @@
                     </a>
                 </div>
             {% endfor %}
+
+            {{ pagerfanta(pager, {'prev_message': 'Poprzednia', 'next_message': 'Następna'}) }}
         </div>
     </div>
 </div>

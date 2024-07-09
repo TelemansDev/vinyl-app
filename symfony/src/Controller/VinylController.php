@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Repository\VinylMixRepository;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\UnicodeString;
@@ -29,11 +32,20 @@ class VinylController extends AbstractController
     }
 
     #[Route(path:'/browse/{slug}', name:'browse')]
-    public function browse(VinylMixRepository $vinylMixRepository, string $slug = ''): Response
+    public function browse(VinylMixRepository $vinylMixRepository, Request $request, string $slug = ''): Response
     {
+        $queryBuilder = $vinylMixRepository->createOrderedByVotesQueryBuilder($slug);
+        $adapter = new QueryAdapter($queryBuilder);
+        $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
+            $adapter,
+            $request->query->get('page', 1),
+            9
+        );
+
         return $this->render('vinyl/browse.html.twig', [
             'genre' => $this->prepareGenre($slug),
-            'mixes' => $vinylMixRepository->findAllOrderedByVotes($slug),
+            'pager' => $pagerfanta,
+            ['next_message' => 'dupa']
         ]);
     }
 
